@@ -2,10 +2,10 @@
 import random
 import tkinter as tk
 from PIL import Image, ImageTk
+import time
 
 cat_dimensions = (120, 120)
-scale_height = 480 / 120
-scale_width = 480 / 120
+center_dimensions = None
 cycle = 0 #cycle is the index -> which frame we want to currently play
 check = 0 # first animation is idle
 idle = [1, 2, 3, 4, 5] # idle numbers
@@ -14,37 +14,38 @@ jump_Right = [8, 9]
 jump_Left = [10, 11]
 roll_Left = [12, 13]
 roll_Right = [14, 15]
+spawnInterval = 5
 
 event_number = random.randrange(1, 3, 1)
 impath = '../Cat GIFs/'
 
 #window.after is after y ms, do the function action -> can provide parameters as further arguments
 # transfer random no. to event
-def event(cycle, check, event_number):
+def event(cycle, check, event_number, window, label):
     if event_number in idle:
         check = 0
         #print('idle')
-        window.after(150, update, cycle, check, event_number)  # no. 1,2,3 = idle
+        window.after(150, update, cycle, check, event_number, window, label)  # no. 1,2,3 = idle
     elif event_number in jump_Up:
         check = 1
         #print('jump up')
-        window.after(150, update, cycle, check, event_number)  # no. 4,5 = jump up
+        window.after(150, update, cycle, check, event_number, window, label)  # no. 4,5 = jump up
     elif event_number in jump_Right:
         check = 2
         #print('jump right')
-        window.after(150, update, cycle, check, event_number)  # no. 6,7 = jump right
+        window.after(150, update, cycle, check, event_number, window, label)  # no. 6,7 = jump right
     elif event_number in jump_Left:
         check = 3
         #print('jump left')
-        window.after(150, update, cycle, check, event_number)  # no 8,9 = jump left
+        window.after(150, update, cycle, check, event_number, window, label)  # no 8,9 = jump left
     elif event_number in roll_Left:
         check = 4
         #print('roll left')
-        window.after(150, update, cycle, check, event_number)  # no. 12,13 = roll left
+        window.after(150, update, cycle, check, event_number, window, label)  # no. 12,13 = roll left
     elif event_number in roll_Right:
         check = 5
         #print('roll right')
-        window.after(150, update, cycle, check, event_number)  # no. 14,15 = roll right
+        window.after(150, update, cycle, check, event_number, window, label)  # no. 14,15 = roll right
 
 
 # making gif work
@@ -60,7 +61,7 @@ def gif_work(cycle, frames, event_number, first_num, last_num):
     return cycle, event_number
 
 
-def update(cycle, check, event_number):
+def update(cycle, check, event_number, window, label):
     # cycle is frame number
     # check is which action 
     # event_number is which event
@@ -68,7 +69,10 @@ def update(cycle, check, event_number):
 
     x = 0
     y = 0
-
+    global startTime
+    if time.time() - startTime >= spawnInterval and window == mainWindow:
+        create_display(mainWindow, (random.randrange(XRange[0], XRange[1], 1), random.randrange(YRange[0], YRange[1], 1)))
+        startTime = time.time()
     # idle
     if check == 0:
         frame = idle_Frames[cycle]
@@ -119,7 +123,7 @@ def update(cycle, check, event_number):
 
     # after 1ms, perform event with event_number returned from 
 
-    window.after(1, event, cycle, check, event_number)
+    window.after(1, event, cycle, check, event_number, window, label)
 
 def debug_event(event_number):
     if event_number in idle:
@@ -148,7 +152,35 @@ def open_image(path):
         except EOFError:
             return gifArray  # end of sequence
 
-window = tk.Tk()
+def create_display(masterWindow = None, location = None):
+    if not masterWindow:
+        window = tk.Tk()
+        window.title("Main")
+        label = tk.Label(window, bd=0, bg='white')
+        label.pack()
+        window.eval('tk::PlaceWindow . center')
+        window_details = window.geometry().split('+')
+        x = int(window_details[1]) - cat_dimensions[0] // 2
+        y = int(window_details[2]) - cat_dimensions[1] // 2
+        global center_dimensions
+        center_dimensions = (x, y)
+        window.geometry('+{}+{}'.format(center_dimensions[0], center_dimensions[1]))
+    else:
+        window = tk.Toplevel(masterWindow)
+        window.title("New")
+        label = tk.Label(window, bd=0, bg='white')
+        label.pack()
+        if location:
+            window.geometry('+{}+{}'.format(location[0], location[1]))
+        else: 
+            window.geometry('+{}+{}'.format(center_dimensions[0], center_dimensions[1]))
+    window.after(1, update, cycle, check, event_number, window, label)
+    return window
+
+mainWindow = create_display()
+XRange = (30, center_dimensions[0] * 2 - cat_dimensions[0])
+YRange = (30, center_dimensions[1] * 2 - cat_dimensions[1])
+
 # call buddy's action gif
 idle_Frames = open_image('idle.GIF')  # idle gif
 jump_Up_Frames = open_image('jumpUp.GIF') # sleep gif
@@ -157,15 +189,6 @@ jump_Left_Frames = open_image('jumpLeft.GIF') # jump right gif
 roll_Left_Frames = open_image('rollLeft.GIF')  # roll left gif
 roll_Right_Frames = open_image('rollRight.GIF')  # roll right gif
 
-# window configuration
-label = tk.Label(window, bd=0, bg='white')
-label.pack()
-# place window at center of screen
-window.eval('tk::PlaceWindow . center')
-window_details = window.geometry().split('+')
-x = int(window_details[1]) - cat_dimensions[0] // 2
-y = int(window_details[2]) - cat_dimensions[1] // 2
-window.geometry('+{}+{}'.format(str(x), str(y)))
-# loop the program
-window.after(1, update, cycle, check, event_number)
-window.mainloop()
+startTime = time.time()
+
+mainWindow.mainloop()
