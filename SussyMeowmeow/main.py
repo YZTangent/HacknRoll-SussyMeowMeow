@@ -4,6 +4,7 @@ import time
 import tkinter as tk
 from PIL import Image, ImageTk
 import time
+from playsound import playsound
 
 cat_dimensions = (120, 120)
 center_dimensions = None
@@ -15,10 +16,13 @@ jump_Right = [8, 9]
 jump_Left = [10, 11]
 roll_Left = [12, 13]
 roll_Right = [14, 15]
+scream = [16, 17]
+numEvents = 17
 spawnInterval = 5
 
 event_number = random.randrange(1, 3, 1)
 impath = '../Cat GIFs/'
+audio_path = '../Audio/aughhhhh.mp3'
 
 # https://stackoverflow.com/a/57935285
 def widget_drag_free_bind(widget):
@@ -70,6 +74,10 @@ def event(cycle, check, event_number, window, label):
         check = 5
         #print('roll right')
         window.after(150, update, cycle, check, event_number, window, label)  # no. 14,15 = roll right
+    elif event_number in scream:
+        check = 6
+        #print('scream')
+        window.after(150, update, cycle, check, event_number, window, label)  # no. 16,17 = scream
 
 
 # making gif work
@@ -78,6 +86,9 @@ def gif_work(cycle, frames, event_number, first_num, last_num):
     # first_num and last_num is just for random calculation
     #debug_event(event_number)
     if cycle < len(frames) - 1:
+        if cycle == 0 and event_number in scream:
+            print("SCREAMING")
+            #playsound(audio_path, False)
         cycle += 1
     else:
         cycle = 0
@@ -100,11 +111,11 @@ def update(cycle, check, event_number, window, label):
     # idle
     if check == 0:
         frame = idle_Frames[cycle]
-        cycle, event_number = gif_work(cycle, idle_Frames, event_number, 1, 15)
+        cycle, event_number = gif_work(cycle, idle_Frames, event_number, 1, numEvents)
     # jump up
     elif check == 1:
         frame = jump_Up_Frames[cycle]
-        cycle, event_number = gif_work(cycle, jump_Up_Frames, event_number, 1, 15)
+        cycle, event_number = gif_work(cycle, jump_Up_Frames, event_number, 1, numEvents)
         if cycle < len(jump_Up_Frames) / 2:
             y = -2
         else:
@@ -112,7 +123,7 @@ def update(cycle, check, event_number, window, label):
     # jump right
     elif check == 2:
         frame = jump_Right_Frames[cycle]
-        cycle, event_number = gif_work(cycle, jump_Right_Frames, event_number, 1, 15)
+        cycle, event_number = gif_work(cycle, jump_Right_Frames, event_number, 1, numEvents)
         x = 2
         if cycle < len(jump_Right_Frames) / 2:
             y = -2
@@ -121,7 +132,7 @@ def update(cycle, check, event_number, window, label):
     # jump left
     elif check == 3:
         frame = jump_Left_Frames[cycle]
-        cycle, event_number = gif_work(cycle, jump_Left_Frames, event_number, 1, 15)
+        cycle, event_number = gif_work(cycle, jump_Left_Frames, event_number, 1, numEvents)
         x = -2
         if cycle < len(jump_Left_Frames) / 2:
             y = -3
@@ -130,14 +141,17 @@ def update(cycle, check, event_number, window, label):
     # roll left
     elif check == 4:
         frame = roll_Left_Frames[cycle]
-        cycle, event_number = gif_work(cycle, roll_Left_Frames, event_number, 1, 15)
+        cycle, event_number = gif_work(cycle, roll_Left_Frames, event_number, 1, numEvents)
         x = -3
     # roll right
     elif check == 5:
         frame = roll_Right_Frames[cycle]
-        cycle, event_number = gif_work(cycle, roll_Right_Frames, event_number, 1, 15)
+        cycle, event_number = gif_work(cycle, roll_Right_Frames, event_number, 1, numEvents)
         x = 3
-
+    elif check == 6:
+        print("Hello!")
+        frame = scream_Frames[cycle]
+        cycle, event_number = gif_work(cycle, scream_Frames, event_number, 1, numEvents)
     window_details = window.geometry().split('+')
     curr_x = int(window_details[1])
     curr_y = int(window_details[2])
@@ -215,18 +229,20 @@ jump_Right_Frames = open_image('jumpRight.GIF')  # jump right gif
 jump_Left_Frames = open_image('jumpLeft.GIF') # jump right gif
 roll_Left_Frames = open_image('rollLeft.GIF')  # roll left gif
 roll_Right_Frames = open_image('rollRight.GIF')  # roll right gif
-
+scream_Frames = open_image('idle.GIF')
 # window configuration
 # label = tk.Label(mainWindow, bd=0, bg='black')
 # label.pack()
 # place window at center of screen
+'''
 mainWindow.eval('tk::PlaceWindow . center')
 window_details = mainWindow.geometry().split('+')
 x = int(window_details[1]) - cat_dimensions[0] // 2
 y = int(window_details[2]) - cat_dimensions[1] // 2
 mainWindow.geometry('+{}+{}'.format(str(x), str(y)))
+'''
 # loop the program
-mainWindow.after(1, update, cycle, check, event_number)
+#mainWindow.after(1, update, cycle, check, event_number, window, label)
 startTime = time.time()
 
 mainWindow.mainloop()
