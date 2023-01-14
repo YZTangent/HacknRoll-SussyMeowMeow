@@ -9,12 +9,13 @@ cat_dimensions = (120, 120)
 center_dimensions = None
 cycle = 0 #cycle is the index -> which frame we want to currently play
 check = 0 # first animation is idle
-idle = [1, 2, 3, 4, 5] # idle numbers
-jump_Up = [6, 7]
-jump_Right = [8, 9]
-jump_Left = [10, 11]
-roll_Left = [12, 13]
-roll_Right = [14, 15]
+idle = [1, 2, 3] # idle numbers
+jump_Up = [4, 5]
+jump_Right = [6, 7]
+jump_Left = [8, 9]
+roll_Left = [10, 11]
+roll_Right = [12, 13]
+screm = [14, 15]
 spawnInterval = 5
 
 event_number = random.randrange(1, 3, 1)
@@ -65,11 +66,15 @@ def event(cycle, check, event_number, window, label):
     elif event_number in roll_Left:
         check = 4
         #print('roll left')
-        window.after(150, update, cycle, check, event_number, window, label)  # no. 12,13 = roll left
+        window.after(150, update, cycle, check, event_number, window, label)  # no. 10,11 = roll left
     elif event_number in roll_Right:
         check = 5
         #print('roll right')
-        window.after(150, update, cycle, check, event_number, window, label)  # no. 14,15 = roll right
+        window.after(150, update, cycle, check, event_number, window, label)  # no. 12,13 = roll right
+    elif event_number in screm:
+        check = 6
+        #print('screm')
+        window.after(150, update, cycle, check, event_number, window, label)  # no. 14,15 = screm
 
 
 # making gif work
@@ -137,6 +142,10 @@ def update(cycle, check, event_number, window, label):
         frame = roll_Right_Frames[cycle]
         cycle, event_number = gif_work(cycle, roll_Right_Frames, event_number, 1, 15)
         x = 3
+    # screm
+    elif check == 6:
+        frame = screm_Frames[cycle]
+        cycle, event_number = gif_work(cycle, screm_Frames, event_number, 1, 15)
 
     window_details = window.geometry().split('+')
     curr_x = int(window_details[1])
@@ -161,6 +170,8 @@ def debug_event(event_number):
         print('Roll left')
     elif event_number in roll_Right:
         print('Roll right')
+    elif event_number in screm:
+        print('Screm')
 
 def open_image(path):
     gifArray = []
@@ -215,6 +226,7 @@ jump_Right_Frames = open_image('jumpRight.GIF')  # jump right gif
 jump_Left_Frames = open_image('jumpLeft.GIF') # jump right gif
 roll_Left_Frames = open_image('rollLeft.GIF')  # roll left gif
 roll_Right_Frames = open_image('rollRight.GIF')  # roll right gif
+screm_Frames = open_image('screm.GIF') # screm gif
 
 # window configuration
 # label = tk.Label(mainWindow, bd=0, bg='black')
