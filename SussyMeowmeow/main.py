@@ -53,7 +53,7 @@ def gif_work(cycle, frames, event_number, first_num, last_num):
     # cycle is the index, frames is the array, event_number is. what event
     # first_num and last_num is just for random calculation
     #print(cycle, frames, event_number, first_num, last_num)
-    debug_event(event_number)
+    #debug_event(event_number)
     if cycle < len(frames) - 1:
         cycle += 1
     else:
@@ -79,21 +79,36 @@ def update(cycle, check, event_number, x, y):
         frame = jump_Up_Frames[cycle]
         cycle, event_number = gif_work(cycle, jump_Up_Frames, event_number, 1, 15)
         #print(cycle, event_number)
-        y -= 2
+        if cycle < len(jump_Up_Frames) / 2:
+            print("Up")
+            y -= 2
+        else:
+            print("Down")
+            y += 2
     # jump right
     elif check == 2:
         #print("Update check is 2")
         frame = jump_Right_Frames[cycle]
         cycle, event_number = gif_work(cycle, jump_Right_Frames, event_number, 1, 15)
         x += 2
-        y -= 2
+        if cycle < len(jump_Right_Frames) / 2:
+            y -= 2
+            print("Up")
+        else:
+            print("Down")
+            y += 2
     # jump left
     elif check == 3:
         #print("Update check is")
         frame = jump_Left_Frames[cycle]
         cycle, event_number = gif_work(cycle, jump_Left_Frames, event_number, 1, 15)
         x -= 2
-        y -= 3
+        if cycle < len(jump_Left_Frames) / 2:
+            print("Up")
+            y -= 3
+        else:
+            print("Down")
+            y += 3
     # roll left
     elif check == 4:
         frame = roll_Left_Frames[cycle]
@@ -108,6 +123,7 @@ def update(cycle, check, event_number, x, y):
     # str(x) + 1050 is the position of the window
     # we only updates x on roll left or roll right because it changes position
     window.geometry('480x480+' + str(x) + '+' + str(y))
+    #print(window.geometry())
     # 480 is sprite size, 1050 is supposed to be screen res
     #print("PROCEEDING")
     label.configure(image=frame)
@@ -145,6 +161,8 @@ roll_Right_Frames = [tk.PhotoImage(file=impath + 'rollRight.GIF', format='gif -i
 # window configuration
 label = tk.Label(window, bd=0, bg='white')
 label.pack()
+#window.geometry('480x480')
+#window.eval('tk::PlaceWindow . center')
 # loop the program
 window.after(1, update, cycle, check, event_number, x, y)
 window.mainloop()
