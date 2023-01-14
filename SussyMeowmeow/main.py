@@ -1,5 +1,6 @@
 #import pyautogui
 import random
+import time
 import tkinter as tk
 from PIL import Image, ImageTk
 
@@ -17,6 +18,32 @@ roll_Right = [14, 15]
 
 event_number = random.randrange(1, 3, 1)
 impath = '../Cat GIFs/'
+
+# https://stackoverflow.com/a/57935285
+def widget_drag_free_bind(widget):
+    """Bind any widget or Tk master object with free drag"""
+    if isinstance(widget, tk.Tk):
+        master = widget  # root window
+    else:
+        master = widget.master
+
+    x, y = 0, 0
+    def mouse_motion(event):
+        global x, y
+        # Positive offset represent the mouse is moving to the lower right corner, negative moving to the upper left corner
+        offset_x, offset_y = event.x - x, event.y - y
+        new_x = master.winfo_x() + offset_x
+        new_y = master.winfo_y() + offset_y
+        new_geometry = f"+{new_x}+{new_y}"
+        master.geometry(new_geometry)
+
+    def mouse_press(event):
+        global x, y
+        count = time.time()
+        x, y = event.x, event.y
+
+    widget.bind("<B1-Motion>", mouse_motion)  # Hold the left mouse button and drag events
+    widget.bind("<Button-1>", mouse_press)  # The left mouse button press event, long calculate by only once
 
 #window.after is after y ms, do the function action -> can provide parameters as further arguments
 # transfer random no. to event
@@ -114,7 +141,10 @@ def update(cycle, check, event_number):
     curr_x = int(window_details[1])
     curr_y = int(window_details[2])
     window.geometry('+{}+{}'.format(str(curr_x + x), str(curr_y + y)))
-
+    window.wm_attributes("-transparentcolor", "black")
+    window.overrideredirect(True)
+    window.attributes('-topmost', True)
+    widget_drag_free_bind(window)
     label.configure(image=frame)
 
     # after 1ms, perform event with event_number returned from 
@@ -158,7 +188,7 @@ roll_Left_Frames = open_image('rollLeft.GIF')  # roll left gif
 roll_Right_Frames = open_image('rollRight.GIF')  # roll right gif
 
 # window configuration
-label = tk.Label(window, bd=0, bg='white')
+label = tk.Label(window, bd=0, bg='black')
 label.pack()
 # place window at center of screen
 window.eval('tk::PlaceWindow . center')
