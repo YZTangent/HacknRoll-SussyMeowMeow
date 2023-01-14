@@ -157,11 +157,16 @@ def update(cycle, check, event_number, window, label):
     curr_x = int(window_details[1])
     curr_y = int(window_details[2])
     window.geometry('+{}+{}'.format(str(curr_x + x), str(curr_y + y)))
-    label.configure(image=frame)
-
+    label.configure(image=None)
+    label.destroy()#.image.blank()#configure(image='')
+    newLabel = tk.Label(window, width=100, bg='systemTransparent')
+    newLabel.pack()
+    #label.configure(image =None)
+    newLabel.configure(image=frame)
+    #label.configure(image=frame)
     # after 1ms, perform event with event_number returned from 
 
-    window.after(1, event, cycle, check, event_number, window, label)
+    window.after(1, event, cycle, check, event_number, window, newLabel)
 
 def debug_event(event_number):
     if event_number in idle:
@@ -202,10 +207,11 @@ def create_display(masterWindow = None, location = None):
         label.pack()
         window.eval('tk::PlaceWindow . center')
         window_details = window.geometry().split('+')
-        x = int(window_details[1]) - cat_dimensions[0] // 2
+        x = int(window_details[1]) - cat_dimensions[0] // 2 + 450
         y = int(window_details[2]) - cat_dimensions[1] // 2
         global center_dimensions
         center_dimensions = (x, y)
+        #print("CENTER: " + str(center_dimensions))
         window.geometry('+{}+{}'.format(center_dimensions[0], center_dimensions[1]))
     else:
         window = tk.Toplevel(masterWindow)
@@ -213,24 +219,26 @@ def create_display(masterWindow = None, location = None):
         window.overrideredirect(1)
         window.overrideredirect(0)
         label = tk.Label(window, width=100, bg='systemTransparent')
-        window.wm_attributes("-transparent", True)
+        #window.wm_attributes("-transparent", True)
         label.pack()
         if location:
             window.geometry('+{}+{}'.format(location[0], location[1]))
         else: 
             window.geometry('+{}+{}'.format(center_dimensions[0], center_dimensions[1]))
-    # window.wm_attributes("-transparent", True)
+    window.wm_attributes("-transparent", True)
     # window.overrideredirect(True)
     # window.attributes('-topmost', True)
+    window.attributes('-topmost', True)
     widget_drag_free_bind(window)
-    # window.wm_attributes("-topmost", True)
-    # window.config(bg='systemTransparent')
+    window.wm_attributes("-topmost", True)
+    window.config(bg='systemTransparent')
     window.after(1, update, cycle, check, event_number, window, label)
     return window
 
 mainWindow = create_display()
 XRange = (30, center_dimensions[0] * 2 - cat_dimensions[0])
 YRange = (30, center_dimensions[1] * 2 - cat_dimensions[1])
+#print(XRange, YRange)
 
 # call buddy's action gif
 idle_Frames = open_image('idle.GIF')  # idle gif
