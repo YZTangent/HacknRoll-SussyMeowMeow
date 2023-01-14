@@ -13,7 +13,7 @@ roll_Left = [12, 13]
 roll_Right = [14, 15]
 
 event_number = random.randrange(1, 3, 1)
-impath = 'C:\\Users\\Student\\Desktop\\Projects\\HacknRoll\\image\\'
+impath = '../Cat GIFs'
 
 
 # transfer random no. to event
