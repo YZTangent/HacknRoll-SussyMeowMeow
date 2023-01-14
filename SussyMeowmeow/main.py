@@ -1,8 +1,11 @@
 #import pyautogui
 import random
 import tkinter as tk
+from PIL import Image, ImageTk
 
-dimensions = (480, 480)
+cat_dimensions = (120, 120)
+scale_height = 480 / 120
+scale_width = 480 / 120
 cycle = 0 #cycle is the index -> which frame we want to currently play
 check = 0 # first animation is idle
 idle = [1, 2, 3, 4, 5] # idle numbers
@@ -13,7 +16,7 @@ roll_Left = [12, 13]
 roll_Right = [14, 15]
 
 event_number = random.randrange(1, 3, 1)
-impath = './Cat GIFs/'
+impath = '../Cat GIFs/'
 
 #window.after is after y ms, do the function action -> can provide parameters as further arguments
 # transfer random no. to event
@@ -132,26 +135,36 @@ def debug_event(event_number):
     elif event_number in roll_Right:
         print('Roll right')
 
+def open_image(path):
+    gifArray = []
+    with Image.open(impath + path) as im: 
+        im.seek(0)  # open the first frame
+
+        try:
+            while True:
+                # append frame to array
+                gifArray.append(ImageTk.PhotoImage(im.resize(cat_dimensions)))
+                im.seek(im.tell() + 1)
+        except EOFError:
+            return gifArray  # end of sequence
+
 window = tk.Tk()
 # call buddy's action gif
-idle_Frames = [tk.PhotoImage(file=impath + 'idle.GIF', format='gif -index %i' % (i)) for i in range(6)]  # idle gif
-jump_Up_Frames = [tk.PhotoImage(file=impath + 'jumpUp.GIF', format='gif -index %i' % (i)) for i in range(6)]  # sleep gif
-jump_Right_Frames = [tk.PhotoImage(file=impath + 'jumpRight.GIF', format='gif -index %i' % (i)) for i in
-                 range(14)]  # jump right gif
-jump_Left_Frames = [tk.PhotoImage(file=impath + 'jumpLeft.GIF', format='gif -index %i' % (i)) for i in
-                 range(14)]  # jump right gif
-roll_Left_Frames = [tk.PhotoImage(file=impath + 'rollLeft.GIF', format='gif -index %i' % (i)) for i in
-                 range(11)]  # roll left gif
-roll_Right_Frames = [tk.PhotoImage(file=impath + 'rollRight.GIF', format='gif -index %i' % (i)) for i in
-                 range(11)]  # roll right gif
+idle_Frames = open_image('idle.GIF')  # idle gif
+jump_Up_Frames = open_image('jumpUp.GIF') # sleep gif
+jump_Right_Frames = open_image('jumpRight.GIF')  # jump right gif
+jump_Left_Frames = open_image('jumpLeft.GIF') # jump right gif
+roll_Left_Frames = open_image('rollLeft.GIF')  # roll left gif
+roll_Right_Frames = open_image('rollRight.GIF')  # roll right gif
+
 # window configuration
 label = tk.Label(window, bd=0, bg='white')
 label.pack()
 # place window at center of screen
 window.eval('tk::PlaceWindow . center')
 window_details = window.geometry().split('+')
-x = int(window_details[1]) - dimensions[0] // 2
-y = int(window_details[2]) - dimensions[1] // 2
+x = int(window_details[1]) - cat_dimensions[0] // 2
+y = int(window_details[2]) - cat_dimensions[1] // 2
 window.geometry('+{}+{}'.format(str(x), str(y)))
 # loop the program
 window.after(1, update, cycle, check, event_number)
