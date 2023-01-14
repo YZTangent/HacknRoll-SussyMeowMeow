@@ -196,7 +196,9 @@ def create_display(masterWindow = None, location = None):
     if not masterWindow:
         window = tk.Tk()
         window.title("Main")
-        label = tk.Label(window, bd=0, bg='black')
+        window.overrideredirect(1)
+        window.overrideredirect(0)
+        label = tk.Label(window, width=100, bg='systemTransparent')
         label.pack()
         window.eval('tk::PlaceWindow . center')
         window_details = window.geometry().split('+')
@@ -208,16 +210,21 @@ def create_display(masterWindow = None, location = None):
     else:
         window = tk.Toplevel(masterWindow)
         window.title("New")
-        label = tk.Label(window, bd=0, bg='black')
+        window.overrideredirect(1)
+        window.overrideredirect(0)
+        label = tk.Label(window, width=100, bg='systemTransparent')
+        window.wm_attributes("-transparent", True)
         label.pack()
         if location:
             window.geometry('+{}+{}'.format(location[0], location[1]))
         else: 
             window.geometry('+{}+{}'.format(center_dimensions[0], center_dimensions[1]))
-    window.wm_attributes("-transparent", True)
-    window.overrideredirect(True)
-    window.attributes('-topmost', True)
+    # window.wm_attributes("-transparent", True)
+    # window.overrideredirect(True)
+    # window.attributes('-topmost', True)
     widget_drag_free_bind(window)
+    # window.wm_attributes("-topmost", True)
+    # window.config(bg='systemTransparent')
     window.after(1, update, cycle, check, event_number, window, label)
     return window
 
