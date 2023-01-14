@@ -23,7 +23,7 @@ spawnInterval = 5
 
 event_number = random.randrange(1, 3, 1)
 impath = '../Cat GIFs/'
-audio_path = '../Audio/aughhhhh.mp3'
+audio_path = '../Audio/augh_shortened.mp3'
 
 # https://stackoverflow.com/a/57935285
 def widget_drag_free_bind(widget):
@@ -89,7 +89,7 @@ def gif_work(cycle, frames, event_number, first_num, last_num):
     if cycle < len(frames) - 1:
         if cycle == 0 and event_number in screm:
             print("SCREAMING")
-            #playsound(audio_path, False)
+            playsound(audio_path, False)
         cycle += 1
     else:
         cycle = 0
