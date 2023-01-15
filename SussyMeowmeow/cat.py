@@ -10,7 +10,7 @@ from .util import load_gif_frames
 
 if platform.system() == "Windows":
     import winsound
-    play_sound = lambda sound_path: winsound.PlaySound(sound_path, winsound.SND_ASYNC)
+    play_sound = lambda sound_path: winsound.PlaySound(str(sound_path), winsound.SND_ASYNC)
 else:
     from playsound import playsound
     play_sound = lambda sound_path: playsound(sound_path)
