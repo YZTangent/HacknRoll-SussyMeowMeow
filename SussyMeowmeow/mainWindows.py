@@ -1,9 +1,12 @@
 #import pyautogui
+import os
 import random
 import time
 import tkinter as tk
+import winsound
 from PIL import Image, ImageTk
 import time
+from math import floor
 from playsound import playsound
 
 cat_dimensions = (120, 120)
@@ -23,7 +26,7 @@ spawnInterval = 5
 
 event_number = random.randrange(1, 3, 1)
 impath = '../Cat GIFs/'
-audio_path = '../Audio/augh_shortened.mp3'
+audio_path = 'Audio/augh_compressed_sped_up.wav'
 
 # https://stackoverflow.com/a/57935285
 def widget_drag_free_bind(widget):
@@ -89,7 +92,7 @@ def gif_work(cycle, frames, event_number, first_num, last_num):
     if cycle < len(frames) - 1:
         if cycle == 0 and event_number in screm:
             print("SCREAMING")
-            playsound(audio_path, False)
+            winsound.PlaySound(audio_path, winsound.SND_ASYNC)
         cycle += 1
     else:
         cycle = 0
@@ -117,38 +120,45 @@ def update(cycle, check, event_number, window, label):
     elif check == 1:
         frame = jump_Up_Frames[cycle]
         cycle, event_number = gif_work(cycle, jump_Up_Frames, event_number, 1, numEvents)
-        if cycle < len(jump_Up_Frames) / 2:
-            y = -2
-        else:
-            y = 2
+        # if cycle < len(jump_Up_Frames) / 2:
+        #     y = -20
+        # else:
+        #     y = 20
+        if cycle != 0:
+            y = floor(20 * (cycle - 3))
+        print("up " + str(cycle) + " " + str(y))
     # jump right
     elif check == 2:
         frame = jump_Right_Frames[cycle]
         cycle, event_number = gif_work(cycle, jump_Right_Frames, event_number, 1, numEvents)
-        x = 2
-        if cycle < len(jump_Right_Frames) / 2:
-            y = -2
-        else:
-            y = 2
+        x = 12
+        # if cycle < len(jump_Right_Frames) / 2:
+        #     y = -2
+        # else:
+        #     y = 2
+        y = floor(3 * (cycle - (len(jump_Right_Frames) / 2)))
+        # print("right " + str(cycle) + " " + str(y))
     # jump left
     elif check == 3:
         frame = jump_Left_Frames[cycle]
         cycle, event_number = gif_work(cycle, jump_Left_Frames, event_number, 1, numEvents)
-        x = -2
-        if cycle < len(jump_Left_Frames) / 2:
-            y = -3
-        else:
-            y = 3
+        x = -12
+        # if cycle < len(jump_Left_Frames) / 2:
+        #     y = -3
+        # else:
+        #     y = 3
+        y = floor(3 * (cycle - (len(jump_Left_Frames) / 2)))
+        # print("left " + str(cycle) + " " + str(y))
     # roll left
     elif check == 4:
         frame = roll_Left_Frames[cycle]
         cycle, event_number = gif_work(cycle, roll_Left_Frames, event_number, 1, numEvents)
-        x = -3
+        x = -10
     # roll right
     elif check == 5:
         frame = roll_Right_Frames[cycle]
         cycle, event_number = gif_work(cycle, roll_Right_Frames, event_number, 1, numEvents)
-        x = 3
+        x = 10
     # screm
     elif check == 6:
         frame = screm_Frames[cycle]
