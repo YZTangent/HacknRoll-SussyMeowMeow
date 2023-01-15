@@ -25,7 +25,7 @@ numEvents = 15
 spawnInterval = 5
 
 event_number = random.randrange(1, 3, 1)
-impath = 'Cat GIFs/'
+impath = '../Cat GIFs/'
 audio_path = 'Audio/augh_compressed_sped_up.wav'
 
 # https://stackoverflow.com/a/57935285
