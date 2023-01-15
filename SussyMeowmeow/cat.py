@@ -2,13 +2,18 @@ from enum import Enum
 from math import floor
 from pathlib import Path
 from typing import Callable, TypeVar
+import platform
 
 from PIL import Image, ImageTk
-from playsound import playsound
 
 from .util import load_gif_frames
 
-play_sound = lambda sound_path: playsound(sound_path)
+if platform.system() == "Windows":
+    import winsound
+    play_sound = lambda sound_path: winsound.PlaySound(sound_path, winsound.SND_ASYNC)
+else:
+    from playsound import playsound
+    play_sound = lambda sound_path: playsound(sound_path)
 
 root_dir = Path(__file__).parent.parent
 gif_dir = root_dir / "Cat GIFs"
