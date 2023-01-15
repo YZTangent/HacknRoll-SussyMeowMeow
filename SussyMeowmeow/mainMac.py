@@ -22,8 +22,8 @@ numEvents = 15
 spawnInterval = 5
 
 event_number = random.randrange(1, 3, 1)
-impath = '../Cat GIFs/'
-audio_path = '../Audio/augh_compressed_sped_up.mp3'
+impath = '../Resources/'
+audio_path = '../Resources/augh_compressed_sped_up.mp3'
 
 # https://stackoverflow.com/a/57935285
 def widget_drag_free_bind(widget):
