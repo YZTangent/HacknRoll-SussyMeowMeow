@@ -1,0 +1,5 @@
+Have py2app installed.
+
+1. From root folder, run $ python3 CatSetup/Setup.py py2app
+2. The app will be found in dist.
+2. To send the app to others, compress it first and then send the zip file.

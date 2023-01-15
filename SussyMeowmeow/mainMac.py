@@ -22,8 +22,8 @@ numEvents = 15
 spawnInterval = 5
 
 event_number = random.randrange(1, 3, 1)
-impath = '../Cat GIFs/'
-audio_path = '../Audio/augh_compressed_sped_up.mp3'
+impath = '../Resources/'
+audio_path = '../Resources/augh_compressed_sped_up.mp3'
 
 # https://stackoverflow.com/a/57935285
 def widget_drag_free_bind(widget):
@@ -157,16 +157,16 @@ def update(cycle, check, event_number, window, label):
     curr_x = int(window_details[1])
     curr_y = int(window_details[2])
     window.geometry('+{}+{}'.format(str(curr_x + x), str(curr_y + y)))
-    label.configure(image=None)
-    label.destroy()#.image.blank()#configure(image='')
-    newLabel = tk.Label(window, width=100, bg='systemTransparent')
-    newLabel.pack()
+    label.configure(image=frame)
+    #label.destroy()#.image.blank()#configure(image='')
+    #newLabel = tk.Label(window, width=100, bg='systemTransparent')
+    #newLabel.pack()
     #label.configure(image =None)
-    newLabel.configure(image=frame)
+    #newLabel.configure(image=frame)
     #label.configure(image=frame)
     # after 1ms, perform event with event_number returned from 
 
-    window.after(1, event, cycle, check, event_number, window, newLabel)
+    window.after(1, event, cycle, check, event_number, window, label)
 
 def debug_event(event_number):
     if event_number in idle:
