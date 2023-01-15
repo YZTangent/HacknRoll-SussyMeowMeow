@@ -120,10 +120,11 @@ def update(cycle, check, event_number, window, label):
     elif check == 1:
         frame = jump_Up_Frames[cycle]
         cycle, event_number = gif_work(cycle, jump_Up_Frames, event_number, 1, numEvents)
-        if cycle < len(jump_Up_Frames) / 2:
-            y = -20
-        else:
-            y = 20
+        # if cycle < len(jump_Up_Frames) / 2:
+        #     y = -20
+        # else:
+        #     y = 20
+        y = floor(5 * (cycle - (len(jump_Up_Frames) / 2)))
     # jump right
     elif check == 2:
         frame = jump_Right_Frames[cycle]
@@ -133,7 +134,7 @@ def update(cycle, check, event_number, window, label):
         #     y = -2
         # else:
         #     y = 2
-        y = floor(0.25 * cycle * cycle - 4 * cycle)
+        y = floor(5 * (cycle - (len(jump_Right_Frames) / 2)))
         print("right " + str(cycle) + " " + str(y))
     # jump left
     elif check == 3:
@@ -144,7 +145,7 @@ def update(cycle, check, event_number, window, label):
         #     y = -3
         # else:
         #     y = 3
-        y = floor(0.25 * cycle * cycle + 4 * cycle)
+        y = floor(5 * (cycle - (len(jump_Left_Frames) / 2)))
         print("left " + str(cycle) + " " +  str(y))
     # roll left
     elif check == 4:
