@@ -118,37 +118,37 @@ def update(cycle, check, event_number, window, label):
         frame = jump_Up_Frames[cycle]
         cycle, event_number = gif_work(cycle, jump_Up_Frames, event_number, 1, numEvents)
         if cycle < len(jump_Up_Frames) / 2:
-            y = -2
+            y = -6
         else:
             y = 2
     # jump right
     elif check == 2:
         frame = jump_Right_Frames[cycle]
         cycle, event_number = gif_work(cycle, jump_Right_Frames, event_number, 1, numEvents)
-        x = 2
+        x = 7
         if cycle < len(jump_Right_Frames) / 2:
-            y = -2
+            y = -5
         else:
-            y = 2
+            y = 5
     # jump left
     elif check == 3:
         frame = jump_Left_Frames[cycle]
         cycle, event_number = gif_work(cycle, jump_Left_Frames, event_number, 1, numEvents)
-        x = -2
+        x = -7
         if cycle < len(jump_Left_Frames) / 2:
-            y = -3
+            y = -5
         else:
-            y = 3
+            y = 5
     # roll left
     elif check == 4:
         frame = roll_Left_Frames[cycle]
         cycle, event_number = gif_work(cycle, roll_Left_Frames, event_number, 1, numEvents)
-        x = -3
+        x = -7
     # roll right
     elif check == 5:
         frame = roll_Right_Frames[cycle]
         cycle, event_number = gif_work(cycle, roll_Right_Frames, event_number, 1, numEvents)
-        x = 3
+        x = 7
     # screm
     elif check == 6:
         frame = screm_Frames[cycle]
@@ -158,15 +158,10 @@ def update(cycle, check, event_number, window, label):
     curr_y = int(window_details[2])
     window.geometry('+{}+{}'.format(str(curr_x + x), str(curr_y + y)))
     label.configure(image=None)
-    label.destroy()#.image.blank()#configure(image='')
-    newLabel = tk.Label(window, width=100, bg='systemTransparent')
-    newLabel.pack()
-    #label.configure(image =None)
-    newLabel.configure(image=frame)
-    #label.configure(image=frame)
+    label.configure(image=frame)
     # after 1ms, perform event with event_number returned from 
 
-    window.after(1, event, cycle, check, event_number, window, newLabel)
+    window.after(1, event, cycle, check, event_number, window, label)
 
 def debug_event(event_number):
     if event_number in idle:
